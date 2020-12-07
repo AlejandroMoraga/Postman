@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "de93b945-7dfc-41c7-bf36-00cd3109a31f",
+		"_postman_id": "3ee8ad1b-3ecd-4eec-9f85-c2e0ff4b2530",
 		"name": "Transbank Test",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
@@ -36,6 +36,55 @@
 		},
 		{
 			"name": "http://localhost:5000/people/",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "fa1e7d21-c638-4a04-82f8-43e834899b1c",
+						"exec": [
+							"var jsonData = pm.response.json();\r",
+							"const schema={\r",
+							"  \"type\": \"array\",\r",
+							"  \"items\": {\r",
+							"    \"type\": \"object\",\r",
+							"        \"properties\": {\r",
+							"                        \"firstMame\": { \"type\": \"string\" },\r",
+							"                        \"lastName\": { \"type\": \"string\" },\r",
+							"                        \"age\": { \"type\": \"integer\" },\r",
+							"                        \"id\": { \"type\": \"string\" },\r",
+							"    },\r",
+							"    \"required\": [\"firstMame\", \"lastName\",\"age\",\"id\"]\r",
+							"  }\r",
+							"}\r",
+							"\r",
+							"var obj = JSON.parse(request.data);\r",
+							"\r",
+							"pm.test(\"Validar response no sea vacio\", () => {\r",
+							"    pm.expect(jsonData.length).to.greaterThan(0);\r",
+							"});\r",
+							"\r",
+							"if(jsonData.length>0){\r",
+							"    pm.test(\"Validar campos de la respuesta\", () => {\r",
+							"        pm.response.to.have.jsonSchema(schema);\r",
+							"    });\r",
+							"    pm.test(\"validar que el primer nombre es el mismo en request y response\",()=>{\r",
+							"        pm.expect(jsonData[jsonData.length-1].firstMame).to.equal(obj.firstMame);\r",
+							"    })\r",
+							"    pm.test(\"validar que el apellido es el mismo en request y response\",()=>{\r",
+							"        pm.expect(jsonData[jsonData.length-1].lastName).to.equal(obj.lastName);\r",
+							"    })\r",
+							"    pm.test(\"validar que la edad es la misma en request y response\",()=>{\r",
+							"        pm.expect(jsonData[jsonData.length-1].age).to.equal(obj.age);\r",
+							"    })\r",
+							"    pm.test(\"validar que id en response no este vacio\",()=>{\r",
+							"        pm.expect(jsonData[jsonData.length-1].id).to.not.empty;\r",
+							"    })\r",
+							"}"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
 			"protocolProfileBehavior": {
 				"disableBodyPruning": true
 			},
